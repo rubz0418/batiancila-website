@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Discovery Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e63946;
+            --secondary: #457b9d;
+            --bg: #fdf0f0;
+            --text: #1d3557;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--primary); font-size: 2.5rem; margin-bottom: 5px; }
+        
+        .question-item { margin-bottom: 25px; border-bottom: 1px solid #f1f1f1; padding-bottom: 20px; }
+        .question-text { font-weight: 600; display: block; margin-bottom: 12px; }
+
+        .options-group { display: flex; justify-content: space-between; max-width: 400px; margin: 0 auto; }
+        .option { display: flex; flex-direction: column; align-items: center; cursor: pointer; font-size: 0.8rem; }
+        .option input { accent-color: var(--primary); width: 18px; height: 18px; margin-bottom: 5px; }
+        
+        .labels { display: flex; justify-content: space-between; max-width: 400px; margin: 5px auto 0; font-size: 0.7rem; color: #aaa; text-transform: uppercase; }
+
+        button {
+            display: block; width: 100%; padding: 15px; border: none; border-radius: 8px;
+            font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+
+        .primary-btn { background-color: var(--primary); color: white; margin-top: 20px; }
+        .primary-btn:hover { background-color: #c1121f; }
+
+        .instruction-note {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .match-highlight {
+            background: #fce4ec;
+            border: 2px dashed var(--primary);
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .hidden { display: none; }
+        .result-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--primary); text-align: center; }
+        .aka { display: block; text-align: center; font-style: italic; color: var(--secondary); margin-bottom: 20px; }
+        .desc { white-space: pre-line; margin-bottom: 20px; }
+        
+        @media (max-width: 500px) { h1 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- TEST 1: PERSONALITY -->
+    <div id="section-quiz1">
+        <header>
+            <h1>Romantic Personality Test</h1>
+            <p>Step 1: Discover your own romantic style.</p>
+        </header>
+        <form id="form-quiz1" class="card">
+            <div id="questions1"></div>
+            <button type="submit" class="primary-btn">View My Personality</button>
+        </form>
+    </div>
+
+    <!-- RESULT 1 -->
+    <div id="section-result1" class="hidden">
+        <div class="card">
+            <p style="text-align:center; font-size: 0.8rem; letter-spacing: 1px;">YOUR ROMANTIC PERSONALITY:</p>
+            <div class="result-title" id="res1-title"></div>
+            <div class="aka" id="res1-aka"></div>
+            <div class="desc" id="res1-desc"></div>
+            
+            <div class="instruction-note">
+                ⚠️ Write your name first under your Romantic Personality type on the board, before proceeding to the next test.
+            </div>
+            
+            <button class="primary-btn" onclick="startTest2()">My Ideal Type Test →</button>
+        </div>
+    </div>
+
+    <!-- TEST 2: IDEAL TYPE -->
+    <div id="section-quiz2" class="hidden">
+        <header>
+            <h1>My Ideal Type Test</h1>
+            <p>Step 2: What kind of partner do you actually need?</p>
+        </header>
+        <form id="form-quiz2" class="card">
+            <div id="questions2"></div>
+            <button type="submit" class="primary-btn">Reveal My Ideal Type</button>
+        </form>
+    </div>
+
+    <!-- RESULT 2 -->
+    <div id="section-result2" class="hidden">
+        <div class="card" style="text-align: center;">
+            <p style="font-size: 1rem; color: #777;">The results are in...</p>
+            <div class="result-title" id="res2-final" style="margin: 10px 0;"></div>
+            <p>This is the personality type that best complements your desires and needs in a relationship.</p>
+            
+            <div class="match-highlight">
+                💖 Head back to the board, check the names under your ideal type, and you might just find your perfect match this Valentine’s.
+            </div>
+
+            <button class="primary-btn" onclick="location.reload()" style="background: #6c757d; font-size: 0.9rem; margin-top: 30px;">Restart All Tests</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const quiz1Questions = [
+        "I believe love should feel magical, even if it’s not practical.",
+        "I prefer relationships with clear intentions and long-term plans.",
+        "I often replay conversations in my head, wondering what they really meant.",
+        "I feel most alive when I’m exploring new places, ideas, or people.",
+        "I’m comfortable being single and don’t feel rushed to be in a relationship.",
+        "I feel safest in relationships where there is emotional and financial stability.",
+        "I enjoy grand romantic gestures and deep emotional connections.",
+        "I don’t enter relationships unless I know what I want from it.",
+        "I worry about saying or doing the wrong thing in a relationship.",
+        "I value freedom and independence more than routine.",
+        "I prefer relying on myself rather than on a partner.",
+        "I take time to trust someone because emotional safety matters to me.",
+        "I’m willing to take emotional risks for love.",
+        "I believe love should be built through effort, communication, and consistency.",
+        "Small changes in someone’s behavior make me anxious.",
+        "I struggle to stay in one place—emotionally or physically—for too long.",
+        "I enjoy solitude and don’t need constant emotional validation.",
+        "I choose partners who make me feel secure rather than excited.",
+        "I imagine ideal love stories and compare them to real life.",
+        "Before committing, I think about how a relationship could affect my future stability."
+    ];
+
+    const quiz2Questions = [
+        "I want a partner who believes in grand gestures and emotional connection.",
+        "I prefer a partner who is clear about their intentions in a relationship.",
+        "I like a partner who thinks deeply before making emotional decisions.",
+        "I am attracted to a partner who values freedom and personal growth.",
+        "I admire a partner who is independent and emotionally self-reliant.",
+        "I want a partner who makes me feel emotionally secure.",
+        "I am drawn to someone who expresses love openly and passionately.",
+        "I value someone who plans for the future and commits seriously.",
+        "I feel comfortable with someone who analyzes situations carefully.",
+        "My ideal partner enjoys new experiences and exploring different paths.",
+        "I respect someone who does not depend heavily on others for happiness.",
+        "Trust and stability matter more to me than excitement in a relationship.",
+        "My ideal partner enjoys romance, surprises, and deep emotional moments.",
+        "My ideal partner sees relationships as something to build and grow intentionally.",
+        "My ideal partner communicates thoughtfully and considers consequences.",
+        "I prefer someone who grows alongside me instead of settling too quickly.",
+        "My ideal partner values personal space and individuality.",
+        "I am drawn to someone who prioritizes consistency and reassurance.",
+        "I want someone who believes love should feel magical and intense.",
+        "My ideal partner provides a sense of safety and emotional comfort."
+    ];
+
+    const personalityData = {
+        "Hopeless Romantic": {
+            aka: "The Love at First Swipe",
+            desc: "You’re a dreamer, a feeler, and a full-sender when it comes to love. You want the story — the pursuit, the connection, the spark. You believe in big, beautiful, God-ordained relationships, and you’re not afraid to hope for one with your whole heart.",
+            mapping: [1, 7, 13, 19]
+        },
+        "Intentional Romantic": {
+            aka: "The Walking Green Flag",
+            desc: "You’re thoughtful, emotionally grounded, and spiritually aware. You’ve done the work to understand yourself, and you’re dating with vision — not just vibes. You’re open to connection, but not willing to compromise your values.",
+            mapping: [2, 8, 14]
+        },
+        "The Overthinker": {
+            aka: "The Analysis Paralyzed",
+            desc: "You have a massive heart, but a mind that never stops running. You’re the one replaying conversations at 2 AM. You care deeply about doing things right, which often leads to analysis paralysis. You need a love that is patient and consistent.",
+            mapping: [3, 9, 15]
+        },
+        "The Wanderer": {
+            aka: "The Situationship Specialist",
+            desc: "You’re magnetic and fun. You love the possibility of love… but the reality of commitment might make you feel trapped. You chase emotional highs and say “I’m not ready”… but maybe you just don't trust love yet.",
+            mapping: [4, 10, 16]
+        },
+        "The Lone Wolf": {
+            aka: "Mr./Ms. Independent",
+            desc: "You’re strong, self-sufficient, and rarely the first to catch feelings. Deep down, you may desire connection — but only if it feels deeply safe and won’t cost you your freedom. Vulnerability doesn’t come easily to you.",
+            mapping: [5, 11, 17]
+        },
+        "The Safety Seeker": {
+            aka: "Captain Worst Case Scenario",
+            desc: "You’re steady and loyal, but you play it safe. You’ve likely been hurt before. Instead of risking heartbreak, you may choose what feels familiar. You value consistency and stability above all else.",
+            mapping: [6, 12, 18, 20]
+        }
+    };
+
+    function renderQuestions(list, containerId, prefix) {
+        const container = document.getElementById(containerId);
+        list.forEach((q, i) => {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.innerHTML = `
+                <span class="question-text">${i+1}. ${q}</span>
+                <div class="options-group">
+                    ${[1, 2, 3, 4, 5].map(v => `<label class="option"><input type="radio" name="${prefix}${i+1}" value="${v}" required>${v}</label>`).join('')}
+                </div>
+                <div class="labels"><span>Disagree</span><span>Agree</span></div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function calculateResult(formData, prefix) {
+        let scores = {};
+        for (let [name, type] of Object.entries(personalityData)) {
+            let total = 0;
+            type.mapping.forEach(num => {
+                total += parseInt(formData.get(`${prefix}${num}`));
+            });
+            scores[name] = total / type.mapping.length;
+        }
+        return Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+    }
+
+    // Initialize Quizzes
+    renderQuestions(quiz1Questions, 'questions1', 'q');
+    renderQuestions(quiz2Questions, 'questions2', 'p');
+
+    // Quiz 1 Action
+    document.getElementById('form-quiz1').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const winner = calculateResult(new FormData(e.target), 'q');
+        document.getElementById('section-quiz1').classList.add('hidden');
+        document.getElementById('section-result1').classList.remove('hidden');
+        document.getElementById('res1-title').innerText = winner;
+        document.getElementById('res1-aka').innerText = personalityData[winner].aka;
+        document.getElementById('res1-desc').innerText = personalityData[winner].desc;
+        window.scrollTo(0,0);
+    });
+
+    function startTest2() {
+        document.getElementById('section-result1').classList.add('hidden');
+        document.getElementById('section-quiz2').classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    // Quiz 2 Action
+    document.getElementById('form-quiz2').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const winner = calculateResult(new FormData(e.target), 'p');
+        document.getElementById('section-quiz2').classList.add('hidden');
+        document.getElementById('section-result2').classList.remove('hidden');
+        document.getElementById('res2-final').innerText = `Your ideal type: ${winner}`;
+        window.scrollTo(0,0);
+    });
+</script>
+
+</body>
+</html>
